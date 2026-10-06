@@ -1,6 +1,6 @@
 {
   "name": "Cyberpunk",
-  "layout": "hero-temperatures",
+  "layout": "four-cards",
   "background": {
     "type": "video",
     "file": "background.mp4",

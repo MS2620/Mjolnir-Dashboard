@@ -1,0 +1,18 @@
+{
+  "name": "Minimal Clock",
+  "layout": "minimal-clock",
+  "background": {
+    "type": "solid",
+    "color": "#0b0f14"
+  },
+  "overlay": {
+    "color": "#000000",
+    "opacity": 0.0
+  },
+  "text": {
+    "labelColor": "#8d9bab",
+    "normalColor": "#5eead4",
+    "warningColor": "#fde047",
+    "criticalColor": "#f87171"
+  }
+}

@@ -1,4 +1,8 @@
-/build
-/dist
-/mjolnir.manifest
-/MjolnirDashboard.spec
+__pycache__/
+*.pyc
+dist/
+build/
+*.spec
+logs/
+config/settings.json
+themes/*/background.mp4
