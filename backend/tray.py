@@ -88,8 +88,8 @@ class TrayApp:
         self.icon.run()
 
 
-def start_tray(*args):
-    tray = TrayApp(*args)
+def start_tray(theme_manager, settings, save_settings, themes_dir, config_dir, stop_event):
+    tray = TrayApp(theme_manager, settings, save_settings, themes_dir, config_dir, stop_event)
     thread = threading.Thread(target=tray.run, daemon=True)
     thread.start()
     return tray

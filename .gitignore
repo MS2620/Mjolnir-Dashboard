@@ -6,3 +6,4 @@ build/
 logs/
 config/settings.json
 themes/*/background.mp4
+config/services.json

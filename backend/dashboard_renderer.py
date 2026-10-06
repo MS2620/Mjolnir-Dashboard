@@ -5,6 +5,7 @@ from pathlib import Path
 import cv2
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
+
 WIDTH = 640
 HEIGHT = 480
 
@@ -89,10 +90,24 @@ class DashboardRenderer:
         text = self.theme["text"]
         font_path = text.get("font", r"C:\Windows\Fonts\segoeuib.ttf")
 
-        return {
+        fonts = {
             "label": ImageFont.truetype(font_path, text.get("labelSize", 14)),
             "value": ImageFont.truetype(font_path, text.get("valueSize", 28)),
         }
+
+        clock_size = text.get("clockSize")
+        if clock_size:
+            fonts["clock"] = ImageFont.truetype(font_path, clock_size)
+
+        date_size = text.get("dateSize")
+        if date_size:
+            fonts["date"] = ImageFont.truetype(font_path, date_size)
+
+        hero_size = text.get("heroSize")
+        if hero_size:
+            fonts["hero"] = ImageFont.truetype(font_path, hero_size)
+
+        return fonts
 
     def render(self, sensors: dict) -> Image.Image:
         background_config = self.theme.get("background", {})
@@ -114,7 +129,15 @@ class DashboardRenderer:
         overlay = Image.new("RGBA", (WIDTH, HEIGHT), overlay_color)
         frame = Image.alpha_composite(frame, overlay)
 
-        self._draw_four_cards(frame, sensors)
+        layout = self.theme.get("layout", "four-cards")
+
+        if layout == "minimal-clock":
+            self._draw_minimal_clock(frame, sensors)
+        elif layout == "hero-temperatures":
+            self._draw_hero_temperatures(frame, sensors)
+        else:
+            self._draw_four_cards(frame, sensors)
+
         return frame.convert("RGB")
 
     def _adjust_brightness(self, image: Image.Image, brightness: float) -> Image.Image:
@@ -124,6 +147,8 @@ class DashboardRenderer:
         overlay_alpha = round((1.0 - brightness) * 255)
         darkener = Image.new("RGBA", image.size, (0, 0, 0, overlay_alpha))
         return Image.alpha_composite(image.convert("RGBA"), darkener).convert("RGB")
+
+    # ---------- Four cards layout ----------
 
     def _draw_four_cards(self, frame: Image.Image, sensors: dict):
         draw = ImageDraw.Draw(frame, "RGBA")
@@ -201,6 +226,161 @@ class DashboardRenderer:
                 color,
                 enabled=bool(text.get("glow", True)),
             )
+
+    # ---------- Minimal clock layout ----------
+
+    def _draw_minimal_clock(self, frame: Image.Image, sensors: dict):
+        draw = ImageDraw.Draw(frame, "RGBA")
+        text = self.theme["text"]
+        thresholds = self.theme.get("thresholds", {})
+
+        time_str = sensors.get("time", "--:--")
+        date_str = sensors.get("date", "")
+
+        cpu = sensors.get("cpu", {})
+        gpu = sensors.get("gpu", {})
+
+        # Clock
+        clock_font = self.fonts.get("clock", self.fonts["value"])
+        clock_center_y = 135
+
+        self._centered_text(
+            draw,
+            time_str,
+            WIDTH // 2,
+            clock_center_y,
+            clock_font,
+            hex_to_rgba(text.get("normalColor", "#ffffff")),
+        )
+
+        # Place the date below the actual rendered clock bounds, not at a fixed
+        # position that can overlap a different font or clock size.
+        if "date" in self.fonts and date_str:
+            clock_box = draw.textbbox((0, 0), time_str, font=clock_font)
+            clock_height = clock_box[3] - clock_box[1]
+            date_center_y = clock_center_y + (clock_height // 2) + 42
+
+            self._centered_text(
+                draw,
+                date_str,
+                WIDTH // 2,
+                date_center_y,
+                self.fonts["date"],
+                hex_to_rgba(text.get("labelColor", "#8d9bab")),
+            )
+        # Small temps at bottom
+        y_row = int(HEIGHT * 0.75)
+        gap = 160
+
+        cpu_temp = cpu.get("temp")
+        gpu_temp = gpu.get("temp")
+
+        cpu_text = f"CPU: {cpu_temp:.1f}°C" if cpu_temp is not None else "CPU: --°C"
+        gpu_text = f"GPU: {gpu_temp:.1f}°C" if gpu_temp is not None else "GPU: --°C"
+
+        cpu_color = self._temperature_color(
+            cpu_temp,
+            thresholds.get("cpuWarning", 80),
+            thresholds.get("cpuCritical", 90),
+        )
+        gpu_color = self._temperature_color(
+            gpu_temp,
+            thresholds.get("gpuWarning", 80),
+            thresholds.get("gpuCritical", 90),
+        )
+
+        left_x = (WIDTH - gap) // 2
+        right_x = left_x + gap
+
+        self._centered_text(
+            draw,
+            cpu_text,
+            left_x,
+            y_row,
+            self.fonts["value"],
+            cpu_color,
+        )
+
+        self._centered_text(
+            draw,
+            gpu_text,
+            right_x,
+            y_row,
+            self.fonts["value"],
+            gpu_color,
+        )
+
+    # ---------- Hero temperatures layout ----------
+
+    def _draw_hero_temperatures(self, frame: Image.Image, sensors: dict):
+        draw = ImageDraw.Draw(frame, "RGBA")
+        text = self.theme["text"]
+        thresholds = self.theme.get("thresholds", {})
+
+        cpu = sensors.get("cpu", {})
+        gpu = sensors.get("gpu", {})
+
+        cpu_temp = cpu.get("temp")
+        gpu_temp = gpu.get("temp")
+
+        # Big CPU temp top half
+        hero_font = self.fonts.get("hero", self.fonts["value"])
+        cpu_label = "CPU"
+        gpu_label = "GPU"
+
+        cpu_temp_str = f"{cpu_temp:.1f}°C" if cpu_temp is not None else "--°C"
+        gpu_temp_str = f"{gpu_temp:.1f}°C" if gpu_temp is not None else "--°C"
+
+        cpu_color = self._temperature_color(
+            cpu_temp,
+            thresholds.get("cpuWarning", 80),
+            thresholds.get("cpuCritical", 90),
+        )
+        gpu_color = self._temperature_color(
+            gpu_temp,
+            thresholds.get("gpuWarning", 80),
+            thresholds.get("gpuCritical", 90),
+        )
+
+        # CPU hero
+        self._centered_text(
+            draw,
+            cpu_label,
+            WIDTH // 2,
+            int(HEIGHT * 0.18),
+            self.fonts["label"],
+            hex_to_rgba(text.get("labelColor", "#a6b5c4")),
+        )
+
+        self._centered_text(
+            draw,
+            cpu_temp_str,
+            WIDTH // 2,
+            int(HEIGHT * 0.38),
+            hero_font,
+            cpu_color,
+        )
+
+        # GPU hero
+        self._centered_text(
+            draw,
+            gpu_label,
+            WIDTH // 2,
+            int(HEIGHT * 0.58),
+            self.fonts["label"],
+            hex_to_rgba(text.get("labelColor", "#a6b5c4")),
+        )
+
+        self._centered_text(
+            draw,
+            gpu_temp_str,
+            WIDTH // 2,
+            int(HEIGHT * 0.78),
+            hero_font,
+            gpu_color,
+        )
+
+    # ---------- Helpers ----------
 
     def _temperature_color(self, value, warning, critical):
         text = self.theme["text"]

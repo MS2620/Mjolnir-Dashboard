@@ -1,5 +1,5 @@
 {
-  "activeTheme": "cyberpunk",
+  "activeTheme": "minimal",
   "targetFps": 15,
   "sensorIntervalSeconds": 1.0,
   "themeRotation": {
@@ -22,13 +22,6 @@
     "ram": true,
     "network": true,
     "disks": true,
-    "services": false,
-    "homeAssistant": false
-  },
-  "homeAssistant": {
-    "enabled": false,
-    "url": "",
-    "token": "",
-    "entities": []
+    "services": false
   }
 }

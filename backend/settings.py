@@ -12,41 +12,14 @@ DEFAULT_SETTINGS = {
     "themeRotation": {
         "enabled": False,
         "intervalMinutes": 10,
-        "themes": [],
+        "themes": ["dark-neon", "cyberpunk", "minimal"],
     },
     "display": {
         "width": 640,
         "height": 480,
         "jpegQuality": 85,
     },
-    "modules": {
-        "cpu": True,
-        "gpu": True,
-        "ram": True,
-        "network": True,
-        "disks": True,
-        "services": False,
-        "homeAssistant": False,
-    },
-    "homeAssistant": {
-        "enabled": False,
-        "url": "",
-        "token": "",
-        "entities": [],
-    },
 }
-
-
-def deep_merge(default: dict, custom: dict) -> dict:
-    merged = deepcopy(default)
-
-    for key, value in custom.items():
-        if isinstance(value, dict) and isinstance(merged.get(key), dict):
-            merged[key] = deep_merge(merged[key], value)
-        else:
-            merged[key] = value
-
-    return merged
 
 
 def settings_path() -> Path:
@@ -65,6 +38,18 @@ def load_settings() -> dict:
         return deep_merge(DEFAULT_SETTINGS, custom)
     except (json.JSONDecodeError, OSError):
         return deepcopy(DEFAULT_SETTINGS)
+
+
+def deep_merge(default: dict, custom: dict) -> dict:
+    merged = deepcopy(default)
+
+    for key, value in custom.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            merged[key] = deep_merge(merged[key], value)
+        else:
+            merged[key] = value
+
+    return merged
 
 
 def save_settings(settings: dict) -> None:

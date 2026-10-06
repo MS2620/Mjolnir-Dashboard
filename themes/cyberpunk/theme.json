@@ -1,6 +1,6 @@
 {
   "name": "Cyberpunk",
-  "layout": "four-cards",
+  "layout": "hero-temperatures",
   "background": {
     "type": "video",
     "file": "background.mp4",
@@ -10,20 +10,11 @@
     "color": "#1a001d",
     "opacity": 0.30
   },
-  "cards": {
-    "enabled": true,
-    "background": "#0b0f1a",
-    "opacity": 0.65,
-    "border": "#ff3ddd",
-    "borderOpacity": 0.35,
-    "radius": 12,
-    "gap": 12,
-    "padding": 16
-  },
   "text": {
-    "font": "C:/Windows/Fonts/segoeuib.ttf",
-    "labelSize": 14,
+    "font": "C:\\Users\\mauro\\AppData\\Local\\Microsoft\\Windows\\Fonts\\Orbitron-VariableFont_wght.ttf",
+    "labelSize": 24,
     "valueSize": 32,
+    "heroSize": 62,
     "labelColor": "#ee9fff",
     "normalColor": "#ff3ddd",
     "warningColor": "#ffe44d",

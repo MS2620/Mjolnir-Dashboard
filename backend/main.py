@@ -4,13 +4,12 @@ import time
 import traceback
 import subprocess
 import requests
-import psutil
 from threading import Event
 from app_paths import config_dir, themes_dir
 from settings import load_settings, save_settings
 from sensors import SensorProvider
-from services import ServiceMonitor
 from theme_manager import ThemeManager
+from tray import start_tray
 
 from usb_display import MjolnirDisplay
 
@@ -103,10 +102,6 @@ def native_render_and_stream():
         settings=settings,
     )
 
-    service_monitor = ServiceMonitor(
-        config_dir() / "services.json",
-    )
-
     display = MjolnirDisplay()
     display.jpeg_quality = settings["display"].get("jpegQuality", 85)
 
@@ -114,7 +109,7 @@ def native_render_and_stream():
         display.open()
 
         # Add tray here after basic testing:
-        # start_tray(manager, settings, save_settings, themes_dir(), config_dir(), stop_event)
+        start_tray(manager, settings, save_settings, themes_dir(), config_dir(), stop_event)
 
         sensor_interval = settings.get("sensorIntervalSeconds", 1.0)
         next_sensor_update = 0.0
@@ -144,10 +139,26 @@ def native_render_and_stream():
 def main():
     try:
         log("Entering main()")
+
+        # Start LibreHardwareMonitor if it isn't already serving data.
+        # This EXE runs as admin, so spawning LHM is allowed.
         start_lhm()
+
+        # Give LHM a moment to initialize its web server.
         time.sleep(2.0)
 
-        time.sleep(2.0)
+        if not lhm_is_ready():
+            message = (
+                "LibreHardwareMonitor failed to start or is not serving data at "
+                "http://localhost:8085/data.json.\n"
+                "Check that LibreHardwareMonitor is installed correctly and its "
+                "web server is enabled."
+            )
+            print(message)
+            log(message)
+            return
+
+        log("LHM is running; using sensor endpoint.")
 
         # No visible browser window is opened.
         native_render_and_stream()
@@ -155,7 +166,6 @@ def main():
     except Exception as e:
         log("Fatal error:")
         log(traceback.format_exc())
-        input("Fatal error occurred. Press Enter to exit...")
         raise
 
 if __name__ == "__main__":
