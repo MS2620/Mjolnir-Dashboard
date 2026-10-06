@@ -5,7 +5,6 @@ from pathlib import Path
 import cv2
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-
 WIDTH = 640
 HEIGHT = 480
 
@@ -140,11 +139,14 @@ class DashboardRenderer:
         card_width = (WIDTH - padding * 2 - gap) // 2
         card_height = (HEIGHT - padding * 2 - gap) // 2
 
+        cpu = sensors.get("cpu", {})
+        gpu = sensors.get("gpu", {})
+
         values = [
-            ("CPU Temp", sensors.get("cpu_temp"), "temperature", thresholds.get("cpuWarning", 80), thresholds.get("cpuCritical", 90)),
-            ("GPU Temp", sensors.get("gpu_temp"), "temperature", thresholds.get("gpuWarning", 80), thresholds.get("gpuCritical", 90)),
-            ("CPU Load", sensors.get("cpu_load"), "load", None, None),
-            ("GPU Load", sensors.get("gpu_load"), "load", None, None),
+            ("CPU Temp", cpu.get("temp"), "temperature", thresholds.get("cpuWarning", 80), thresholds.get("cpuCritical", 90)),
+            ("GPU Temp", gpu.get("temp"), "temperature", thresholds.get("gpuWarning", 80), thresholds.get("gpuCritical", 90)),
+            ("CPU Load", cpu.get("load"), "load", None, None),
+            ("GPU Load", gpu.get("load"), "load", None, None),
         ]
 
         positions = [

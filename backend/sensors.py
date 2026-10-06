@@ -36,6 +36,8 @@ class SensorProvider:
             response = requests.get(self.lhm_url, timeout=1.0)
             response.raise_for_status()
 
+            self.log("LHM JSON sample:", response.text[:200])  # TEMP DEBUG
+
             fallback = None
 
             for sensor in self.walk_sensors(response.json()):
@@ -65,6 +67,7 @@ class SensorProvider:
                 if sensor_id == "/amdcpu/0/temperature/3":
                     fallback = temp
 
+            self.log("CPU temp result:", fallback)
             return fallback
 
         except Exception as error:
@@ -161,7 +164,7 @@ class SensorProvider:
         vm = psutil.virtual_memory()
         gpu = self.gpu_stats()
 
-        return {
+        snap = {
             "cpu": {
                 "temp": self.cpu_temp(),
                 "load": psutil.cpu_percent(interval=None) / 100.0,
@@ -178,3 +181,6 @@ class SensorProvider:
             "time": time.strftime("%H:%M"),
             "date": time.strftime("%a %d %b"),
         }
+
+        self.log("Snapshot:", snap)  # TEMP DEBUG
+        return snap

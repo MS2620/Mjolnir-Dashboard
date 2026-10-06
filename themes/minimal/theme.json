@@ -1,6 +1,6 @@
 {
   "name": "Minimal Clock",
-  "layout": "minimal-clock",
+  "layout": "four-cards",
   "background": {
     "type": "solid",
     "color": "#090b10"
@@ -9,10 +9,18 @@
     "color": "#000000",
     "opacity": 0.0
   },
+  "cards": {
+    "enabled": true,
+    "background": "#0d141c",
+    "opacity": 0.55,
+    "border": "#5eead4",
+    "borderOpacity": 0.25,
+    "radius": 10,
+    "gap": 12,
+    "padding": 16
+  },
   "text": {
     "font": "C:/Windows/Fonts/segoeuib.ttf",
-    "clockSize": 78,
-    "dateSize": 18,
     "labelSize": 14,
     "valueSize": 25,
     "labelColor": "#8d9bab",

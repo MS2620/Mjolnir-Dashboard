@@ -1,15 +1,13 @@
 {
   "name": "Dark Neon",
+  "layout": "four-cards",
   "background": {
-    "type": "video",
-    "file": "background.mp4",
-    "fit": "cover",
-    "brightness": 0.55,
-    "blur": 0
+    "type": "solid",
+    "color": "#080b10"
   },
   "overlay": {
-    "color": "#07101a",
-    "opacity": 0.22
+    "color": "#000000",
+    "opacity": 0.0
   },
   "cards": {
     "enabled": true,
@@ -36,6 +34,5 @@
     "cpuCritical": 90,
     "gpuWarning": 80,
     "gpuCritical": 90
-  },
-  "layout": "four-cards"
+  }
 }
