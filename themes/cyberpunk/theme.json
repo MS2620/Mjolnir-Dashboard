@@ -1,0 +1,30 @@
+{
+  "name": "Cyberpunk",
+  "layout": "hero-temperatures",
+  "background": {
+    "type": "video",
+    "file": "background.mp4",
+    "brightness": 0.45
+  },
+  "overlay": {
+    "color": "#1a001d",
+    "opacity": 0.30
+  },
+  "text": {
+    "font": "C:/Windows/Fonts/segoeuib.ttf",
+    "labelSize": 14,
+    "valueSize": 32,
+    "heroSize": 62,
+    "labelColor": "#ee9fff",
+    "normalColor": "#ff3ddd",
+    "warningColor": "#ffe44d",
+    "criticalColor": "#ff4b62",
+    "glow": true
+  },
+  "thresholds": {
+    "cpuWarning": 80,
+    "cpuCritical": 90,
+    "gpuWarning": 80,
+    "gpuCritical": 90
+  }
+}

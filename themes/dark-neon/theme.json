@@ -1,0 +1,41 @@
+{
+  "name": "Dark Neon",
+  "background": {
+    "type": "video",
+    "file": "background.mp4",
+    "fit": "cover",
+    "brightness": 0.55,
+    "blur": 0
+  },
+  "overlay": {
+    "color": "#07101a",
+    "opacity": 0.22
+  },
+  "cards": {
+    "enabled": true,
+    "background": "#081522",
+    "opacity": 0.68,
+    "border": "#2cb9da",
+    "borderOpacity": 0.22,
+    "radius": 10,
+    "gap": 12,
+    "padding": 16
+  },
+  "text": {
+    "font": "C:/Windows/Fonts/segoeuib.ttf",
+    "labelSize": 14,
+    "valueSize": 28,
+    "labelColor": "#a6b5c4",
+    "normalColor": "#00eaff",
+    "warningColor": "#ffe44d",
+    "criticalColor": "#ff5e69",
+    "glow": true
+  },
+  "thresholds": {
+    "cpuWarning": 80,
+    "cpuCritical": 90,
+    "gpuWarning": 80,
+    "gpuCritical": 90
+  },
+  "layout": "four-cards"
+}

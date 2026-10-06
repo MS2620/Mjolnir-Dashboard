@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pyusb
+pillow
+numpy
+mss
+opencv-python
+pillow

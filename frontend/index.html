@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=640, height=480, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Mjolnir Dashboard</title>
+
+  <link rel="stylesheet" href="/static/styles.css?v=10">
+  <link id="theme-css" rel="stylesheet" href="">
+</head>
+
+<body>
+  <main id="screen">
+    <video id="bg-video" autoplay muted loop playsinline preload="auto"></video>
+
+    <div id="video-overlay"></div>
+
+    <section class="dashboard">
+      <article class="card">
+        <div class="label">CPU Temp</div>
+        <div class="value" id="cpu-temp">-- °C</div>
+      </article>
+
+      <article class="card">
+        <div class="label">GPU Temp</div>
+        <div class="value" id="gpu-temp">-- °C</div>
+      </article>
+
+      <article class="card">
+        <div class="label">CPU Load</div>
+        <div class="value" id="cpu-load">-- %</div>
+      </article>
+
+      <article class="card">
+        <div class="label">GPU Load</div>
+        <div class="value" id="gpu-load">-- %</div>
+      </article>
+    </section>
+
+    <!-- Hidden in the headless/AIO view. Use only in browser preview mode. -->
+    <div class="controls">
+      <label>
+        Theme:
+        <select id="theme-select"></select>
+      </label>
+    </div>
+  </main>
+
+  <script src="/static/app.js?v=10"></script>
+</body>
+</html>

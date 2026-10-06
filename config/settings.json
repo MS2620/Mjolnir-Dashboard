@@ -1,0 +1,34 @@
+{
+  "activeTheme": "dark-neon",
+  "targetFps": 15,
+  "sensorIntervalSeconds": 1.0,
+  "themeRotation": {
+    "enabled": false,
+    "intervalMinutes": 10,
+    "themes": [
+      "dark-neon",
+      "minimal",
+      "cyberpunk"
+    ]
+  },
+  "display": {
+    "width": 640,
+    "height": 480,
+    "jpegQuality": 85
+  },
+  "modules": {
+    "cpu": true,
+    "gpu": true,
+    "ram": true,
+    "network": true,
+    "disks": true,
+    "services": false,
+    "homeAssistant": false
+  },
+  "homeAssistant": {
+    "enabled": false,
+    "url": "",
+    "token": "",
+    "entities": []
+  }
+}
