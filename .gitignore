@@ -1,9 +1,22 @@
+# Python
 __pycache__/
-*.pyc
-dist/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# PyInstaller output
 build/
+dist/
 *.spec
+
+# Runtime files
 logs/
+*.log
+
+# Personal/local configuration
 config/settings.json
-themes/*/background.mp4
 config/services.json
+
+# Large personal media
+themes/*/background.mp4
